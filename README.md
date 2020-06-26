@@ -13,6 +13,6 @@ Currently none, but some conditions should be met within the inputs of the encry
 
 ## Authors
 
-**Gorjan Alagic** - *Mentor*
-**Philip Wu** - *Student*
+**Gorjan Alagic** - *Mentor*  
+**Philip Wu** - *Student*  
 **James Zhou** - *Student*
