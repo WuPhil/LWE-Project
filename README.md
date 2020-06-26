@@ -1,12 +1,18 @@
-## LWE-Project
+# LWE-Project
 
-A very primitive LWE system; probably has a load of issues.
+A very primitive LWE system using Python; probably has a load of issues.
 
-#Known Issues
+## Known Issues
 
-Currently none.
+Currently none, but some conditions should be met within the inputs of the encryption scheme.
 
-#Checklist/Plans
+## Checklist/Plans
 
--Create the public & private systems
--Implement some attacks
+* Create the public & private systems
+* Implement some attacks
+
+## Authors
+
+**Gorjan Alagic** - *Mentor*
+**Philip Wu** - *Student*
+**James Zhou** - *Student*
