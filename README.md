@@ -28,6 +28,10 @@ The program is intended to be run in a shell, and will prompt for the parameters
 * enc(n,q,x,m) -  Encrypts the message bit *m*. *x* will be multiplied with random coefficients and added with error, and *m* * *q*/2 will be added .
 * dec(n,q,b,x,a,y) - decrypts the ciphertext and outputs the message bit *m*. It calculates *z*=*y*-*a* * *x*, and outputs the bit based on the accepted error bound.
 
+### Subroutines:
+* check1() - tests the correctness of a single 0 bit and a single 1 bit. The program runs this once by default.
+* check2(bits) - tests the correctness of multiple random bits (specified by the number in the input). This is run once by default with 16 bits.
+
 ## Contributors
 
 **Gorjan Alagic** - *Mentor*  
