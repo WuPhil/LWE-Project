@@ -99,7 +99,7 @@ def bruteForce(q, n):
             a,y = enc(n,q,x,1)
             if (y - numpy.dot(a,test)) % q > b:
                 count += 1
-                
+        
         if count > highest:
             highest = count
             likelyKey = test
@@ -111,10 +111,10 @@ def bruteForce(q, n):
         else:
             test[0] += 1
             for j in range(n-1):
-                #comment the following line to track how the code is operating, but it will slow the calculation
+                #Uncomment the following line to track how the code is operating, but it slows calculation
                 print(count, "many correct evaluations for", test)
                 if test[j] == q:
                     test[j] = 0
                     test[j+1] += 1
                 if test[n-1] == q:
-                    print("None of the keys fully worked, but the best one was", likelyKey, "with a", highest/32, "success rate")
+                    print("None of the keys fully worked, but the best one was", likelyKey, "with a", highest/40, "success rate")
