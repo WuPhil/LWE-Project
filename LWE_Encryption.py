@@ -63,7 +63,7 @@ def check1():
 print("Checking correctness of one 0 and 1\n")
 check1()
 
-##Subroutine 2: Check if random bits are correct with the key
+##Subroutine 2: Check if random bits are correct with various different key
 def check2(bits):
     bitarray = []
     count = 0
@@ -79,9 +79,27 @@ def check2(bits):
 print("\nChecking correctness of 16 random bits...")
 check2(16)
 
-##Brute Force Attack: generates a key and checks every key value until a valid key (passes c many "0" and "1" bits) is found
+##Subroutine 3: Check if random bits are correctly decrypted with a single key - prints out the key, message, and samples
+#Used for debugging
+def check3(bits):
+    bitarray = []
+    count = 0
+    x = keyGen(n,q)
+    print(x)
+    for i in range(bits):
+        bitarray.append(random.randint(0,1))
+    print(bitarray)
+    for i in range(bits):
+        a,y = enc(n,q,x,bitarray[i])
+        print("Coefficient vector:", a)
+        print("Output:", y)
+        if(dec(n,q,b,x,a,y) == bitarray[i]):
+            count += 1
+    print("The currect number of trials was: ", str(count), "/", str(bits))
+
+##Generated Brute Force Attack: generates a key and checks every key value until a valid key (passes c many "0" and "1" bits) is found
 # Don't try with n or q above 10
-def bruteForce(q, n):
+def generateBruteForce(q,n,b):
     x = keyGen(n,q)
     print("The actual key is", x)
     test = [0] * n
@@ -112,9 +130,84 @@ def bruteForce(q, n):
             test[0] += 1
             for j in range(n-1):
                 #Uncomment the following line to track how the code is operating, but it slows calculation
-                print(count, "many correct evaluations for", test)
+                #print(count, "many correct evaluations for", test)
                 if test[j] == q:
                     test[j] = 0
                     test[j+1] += 1
                 if test[n-1] == q:
                     print("None of the keys fully worked, but the best one was", likelyKey, "with a", highest/40, "success rate")
+                    
+##Sample LWE Attack: takes m LWE samples with error bound b and finds the most likely message by trying all possible keys
+#Alternatively, if there is an expected message (bitstring) than the program will output the most likely keys
+def sampleBruteForce(q,n,m,b):
+    coeffs = []
+    outputs = []
+    test = [0] * n
+    print("Enter the", n*m, "coefficients from the samples with space separation:")
+    coeffstring = str(input()).split()
+    for j in range(n*m):
+        coeffstring[j] = int(coeffstring[j])
+    coeffs = [coeffstring[i * n:(i + 1) * n] for i in range((len(coeffstring) + n - 1) // n )]  
+    print("Enter the output for every equation here")
+    outputs = str(input()).split()
+    for j in range(m):
+        outputs[j] = int(outputs[j])
+    message = str(input("Enter expected message here (must be length m) or leave blank to find most likely message): "))
+
+    print(coeffs)
+    print(test)
+    print(outputs)
+    if len(message) == 0:
+        possibleMessages = []
+        scores = []
+        for i in range(q**n):
+            currentMessage = ""
+            for j in range(m):
+                  if (outputs[j] - numpy.dot(test,coeffs[j])) % q <= b:
+                      currentMessage += "0"
+                  else:
+                      currentMessage += "1"
+            if currentMessage in possibleMessages:
+                  ind = possibleMessages.index(currentMessage)
+                  scores[ind] += 1
+            else:
+                  possibleMessages.append(currentMessage)
+                  scores.append(1)
+            test[0] += 1
+            for j in range(n-1):
+                if test[j] == q:
+                    test[j] = 0
+                    test[j+1] += 1
+        print(possibleMessages)
+        highest = max(scores)
+        print("Scores", scores)
+        positions = [i for i, j in enumerate(scores) if j == highest]
+        print("Positions", positions)
+        likelyMessages = []
+        for i in positions:
+            likelyMessages.append(possibleMessages[i])
+        print(likelyMessages)
+        print("The most likely message(s) were", likelyMessages, "with a", highest/(q**n), "probability")
+
+    elif len(message) == m:
+        possibleKeys = []
+        for i in range(q**n):
+            currentMessage = ""
+            for j in range(m):
+                  if (outputs[j] - numpy.dot(test,coeffs[j])) % q <= b:
+                      currentMessage += "0"
+                  else:
+                      currentMessage += "1"
+            if currentMessage == message:
+                possibleKeys.append(test.copy())
+            test[0] += 1
+            for j in range(n-1):
+                if test[j] == q:
+                    test[j] = 0
+                    test[j+1] += 1
+            #print("Current vector testing", test)
+        print("Some possible keys were", possibleKeys)
+#A new situation is having the attacker be given access to decryption and encryption
+#It should be noted that my version of LWE is not strong against this attack
+
+#def Ciphertext_Attack
