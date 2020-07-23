@@ -99,7 +99,7 @@ def check3(bits):
 
 ##Generated Brute Force Attack: generates a key and checks every key value until a valid key (passes c many "0" and "1" bits) is found
 # Don't try with n or q above 10
-def generateBruteForce(q,n,b):
+def generateBruteForce(n,q,b):
     x = keyGen(n,q)
     print("The actual key is", x)
     test = [0] * n
@@ -139,7 +139,7 @@ def generateBruteForce(q,n,b):
                     
 ##Sample LWE Attack: takes m LWE samples with error bound b and finds the most likely message by trying all possible keys
 #Alternatively, if there is an expected message (bitstring) than the program will output the most likely keys
-def sampleBruteForce(q,n,m,b):
+def sampleBruteForce(n,q,m,b):
     coeffs = []
     outputs = []
     test = [0] * n
@@ -154,9 +154,6 @@ def sampleBruteForce(q,n,m,b):
         outputs[j] = int(outputs[j])
     message = str(input("Enter expected message here (must be length m) or leave blank to find most likely message): "))
 
-    print(coeffs)
-    print(test)
-    print(outputs)
     if len(message) == 0:
         possibleMessages = []
         scores = []
@@ -178,15 +175,15 @@ def sampleBruteForce(q,n,m,b):
                 if test[j] == q:
                     test[j] = 0
                     test[j+1] += 1
-        print(possibleMessages)
+        #Uncomment following line to see every possible message that the string could've been
+        #print(possibleMessages)
         highest = max(scores)
-        print("Scores", scores)
+        #Uncomment following line to see the number of times the message corresponding to the position in the possibleMessages was decrypted
+        #print("Scores", scores)
         positions = [i for i, j in enumerate(scores) if j == highest]
-        print("Positions", positions)
         likelyMessages = []
         for i in positions:
             likelyMessages.append(possibleMessages[i])
-        print(likelyMessages)
         print("The most likely message(s) were", likelyMessages, "with a", highest/(q**n), "probability")
 
     elif len(message) == m:
@@ -205,9 +202,36 @@ def sampleBruteForce(q,n,m,b):
                 if test[j] == q:
                     test[j] = 0
                     test[j+1] += 1
+            #Uncomment following line to see which vector decrypted to what message
             #print("Current vector testing", test)
         print("Some possible keys were", possibleKeys)
-#A new situation is having the attacker be given access to decryption and encryption
-#It should be noted that my version of LWE is not strong against this attack
 
-#def Ciphertext_Attack
+#A new situation is having the attacker be given access to decryption and encryption
+#The attacker may decrypt any message, as long as it is not 
+#It should be noted that my version of LWE is not resistant to this attack
+
+def chosenCiphertextAttack(n,q,b):
+    x = keyGen(n,q)
+    print("Secret key is", x)
+    test = [0] * n
+    final = []
+    test[0] = 1
+    for i in range(n):
+        testBit = dec(n,q,b,x,test,0)
+        if testBit == 1:
+            y = 0
+            while dec(n,q,b,x,test,y) == 1:
+                y += 1
+            final.append(y)
+        else:
+            y = q
+            while dec(n,q,b,x,test,y) == 0:
+                y -= 1
+            final.append(y+1)
+        current = test.index(1)
+        test[current] = 0
+        if i < n-1:
+            test[current+1] = 1
+    print("The discovered key was", final)
+
+    

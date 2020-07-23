@@ -34,9 +34,9 @@ The program is intended to be run in a shell, and will prompt for the parameters
 * check3(bits) - Tests correctness of multiple random bits, but only contains one secret key and shows the public information for all the bits encoded as well as the bits encoded.
 
 ### Attacks:
-* generateBruteForce(q,n,b) - Generates a key that the code attacks by requesting many samples and algorithmically checking every value. By default, a key is considered correct if it properly decrpyts 20 0 bits and 20 1 bit messages.
-* sampleBruteForce(q,n,m,b) - Takes *m* * *n* coefficients as the first user input (i.e the first *n* coefficients correspond to the first equation) and *m* outputs to each equation, and finally a third prompt for if there is an expected message. If there is an expected message, then the method solves for the key, otherwise, it will show the most likely key.
-
+* generateBruteForce(n,q,b) - Generates a key that the code attacks by requesting many samples and algorithmically checking every value. By default, a key is considered correct if it properly decrpyts 20 *0* bits and 20 *1* bits.
+* sampleBruteForce(n,q,m,b) - Takes *m* * *n* coefficients as the first user input (the first *n* coefficients correspond to the first equation) and *m* outputs to each equation, and finally a third prompt for if there is an expected message. If there is an expected message, then the method solves for the key, otherwise, it will show the most likely key.
+* chosenCiphertestAttack(n,q,b) - Generates a secret key and uses the decryption oracle to crack it quickly. Does this by entering ciphertexts with only one coefficient and using the error bounds to find the value of that coefficient in the secret key..
 ## Contributors
 
 **Gorjan Alagic** - *Mentor*  
