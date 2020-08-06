@@ -1,7 +1,6 @@
-#LWE Encryption Attempt
+#LWE Encryption System
 
 import numpy
-import sys
 import random
 import math
 
@@ -234,4 +233,76 @@ def chosenCiphertextAttack(n,q,b):
             test[current+1] = 1
     print("The discovered key was", final)
 
-    
+def addct(a0,y0,a1,y1):
+    a = []
+    for i in range(len(a0)):
+        a.append((a0[i] + a1[i]) % q)
+    y = (y0 + y1) % q
+    return a,y
+
+def isnot(x,a,y):
+    y += q//2
+    y %= q
+    z = (y - numpy.dot(a,x)) % q
+    if z<=b:
+        return 0
+    else:
+        return 1
+
+def isxor(x,a0,y0,a1,y1):
+    a,y = addct(a0,y0,a1,y1)
+    z = (y - numpy.dot(a,x)) % q
+    if z<q//2:
+        return 0
+    else:
+        return 1
+
+def checknot(bits):
+    count = 0
+    for i in range(bits):
+        x = keyGen(n,q)
+        a,y = enc(n,q,x,0)
+        if isnot(x,a,y) == 1:
+            count += 1
+        else:
+            print("not 0 failed")
+        a,y = enc(n,q,x,1)
+        if isnot(x,a,y) == 0:
+            count += 1
+        else:
+            print("not 1 failed")
+    print("There were a total of", count, "/", 2*bits, "working nots")
+
+#Issue: With a very small probability, there is a chance for the encryption of 2 0 bits or 2 1 bits to decrypt to 1 when it should be 0
+def checkxor(bits):
+    count = 0
+    for i in range(bits):
+        x = keyGen(n,q)
+        a0,y0 = enc(n,q,x,0)
+        a1,y1 = enc(n,q,x,1)
+        
+        if isxor(x,a0,y0,a1,y1) == 1:
+            #print("xor 0 1 worked")
+            count += 1
+        else:
+            print("xor 0 1 failed")
+            
+        if isxor(x,a1,y1,a0,y0) == 1:
+            #print("xor 1 0 worked")
+            count += 1
+        else:
+            print("xor 1 0 failed")
+            
+        if isxor(x,a0,y0,a0,y0) == 0:
+            #print("xor 0 0 worked")
+            count += 1
+        else:
+            print("FAILED xor 0 0")
+            
+        if isxor(x,a1,y1,a1,y1) == 0:
+            #print("xor 1 1 worked")
+            count += 1
+        else:
+            print("FAILED 1 1")
+    print("There were a total of", count, "/", 4*bits, "working xors")
+        
