@@ -5,12 +5,11 @@ Implementing a very primitive LWE system using Python, and additionally using a 
 ## Plans/Ideas
 
 -Basic Cryptosystem
-* Add more types of encryptions
-* Implement some more attacks
+* Continue FHE development
 
 -EmaiLWE
-* Do some code cleaning (add methods, use the random sample method...)
-* Add more types of encryptions
+* Add more types of encryptions (numbers & strings, possibly files)
+* Add organizations/profiles for each individual person's keys
 
 ## Methodology
 
@@ -42,18 +41,25 @@ The program is intended to be run in a shell, and will prompt for the parameters
 * sampleBruteForce(n,q,m,b) - Takes *m* * *n* coefficients as the first user input (the first *n* coefficients correspond to the first equation) and *m* outputs to each equation, and finally a third prompt for if there is an expected message. If there is an expected message, then the method solves for the key, otherwise, it will show the most likely key.
 * chosenCiphertestAttack(n,q,b) - Generates a secret key and uses the decryption oracle to crack it quickly. Does this by entering ciphertexts with only one coefficient and using the error bounds to find the value of that coefficient in the secret key.
 
+## FHE Methods
+These methods allow LWE encryptions to interact with one another and create encryptions of bits using other encryptions. Currently only the NOT and XOR gate have been developed.
+* isnot(x,a,y) - Takes the input of a ciphertext vector and its output and flips its bit (an encryption of *0* becomes *1* and *1* becomes *0*).
+* isxor(x,a0,y0,a1,y1) - Adds the 2 vectors (*a0* & *a1*) as well as the inputs (*y0* & *y1*). This can be seen as addition mod 2 with the bits which is equivalent to an XOR gate.  
+Checks have been developed for these current FHE methods.
+
 # EmaiLWE
-This program was developed to act as an encryption protocol over email using LWE. One person creates a secret and public key (which are secret.txt and pk.txt respectively) and emails only pk.txt to their acquaintance. The other person can use the encrypion method on a bitstring after downloading pk.txt and send over the ciphertext (cipher.txt), which the other person decrypts after downloading.
+This program was developed to act as an encryption protocol over email using LWE. It is a public key protocol using LWE and was intended to be used over email, and writes out text files with vectors.
 
 ## Usage
-Bob wants to share a message to Alice.
+Bob wants to share a message to Alice.  
 1) Alice uses types "1" with the program to make secret.txt and pk.txt.  
 2) Alice shares pk.txt with Bob.  
 3) Bob types "2" with the program and enters a bitstring he wants to encrypt, which makes cipher.txt.  
-4) Alice types "3" with the program and gets Bob's message
+4) Alice types "3" with the program and gets Bob's message.  
+In addition, there is AutoEmaiLWE that can be used to check for viable parameters for a secret and public key. To avoid error, some rules to follow are *q* should be less than 10000 and *m* has to be greater than *q*/2 for error to exist.
 
 ## Contributors
 
-**Gorjan Alagic** - *Mentor*  
+**Gorjan Alagic** - *Mentor* [Website](www.alagic.org)  
 **Philip Wu** - *Student*  
 **James Zhou** - *Student*
