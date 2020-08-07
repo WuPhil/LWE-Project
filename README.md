@@ -60,6 +60,6 @@ In addition, there is AutoEmaiLWE that can be used to check for viable parameter
 
 ## Contributors
 
-**Gorjan Alagic** - Mentor <a href="www.alagic.org">[Website]</a>  
+**Gorjan Alagic** - Mentor <a href="https://www.alagic.org/">[Website]</a>  
 **Philip Wu** - Student  
 **James Zhou** - Student
