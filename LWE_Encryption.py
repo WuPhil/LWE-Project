@@ -8,7 +8,7 @@ import math
 print("All the values entered should be positive integers\n")
 q = int(input("Modulus size (q): "))
 n = int(input("Number of variables (n): "))
-b = int(input("Error bound (b, should be under q/2): "))
+b = int(input("Error bound (b, should be under q/4): "))
 print()
 
 def keyGen(n,q):
@@ -240,9 +240,11 @@ def addct(a0,y0,a1,y1):
     y = (y0 + y1) % q
     return a,y
 
+def notct(a,y):
+    return a, (y+q//2)%q
+
 def isnot(x,a,y):
-    y += q//2
-    y %= q
+    a,y = notct(a,y)
     z = (y - numpy.dot(a,x)) % q
     if z<=b:
         return 0
@@ -273,7 +275,6 @@ def checknot(bits):
             print("not 1 failed")
     print("There were a total of", count, "/", 2*bits, "working nots")
 
-#Issue: With a very small probability, there is a chance for the encryption of 2 0 bits or 2 1 bits to decrypt to 1 when it should be 0
 def checkxor(bits):
     count = 0
     for i in range(bits):
