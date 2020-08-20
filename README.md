@@ -2,14 +2,13 @@
 
 Implementing a very primitive LWE system using Python, and additionally using a public key system over email to encrypt messages.
 
-## Plans/Ideas
-
--Basic Cryptosystem
-* Continue FHE development
-
+## Table of Contents
+-LWE Methodology  
+-(LWE Encryption file) Usage  
+-Basic Symmetric LWE Methods  
+-Symmetric LWE Attacks  
+-(Rough) Homomorphic Encryption Implementation  
 -EmaiLWE
-* Add more types of encryptions (numbers & strings, possibly files)
-* Add organizations/profiles for each individual person's keys
 
 ## Methodology
 
@@ -28,7 +27,7 @@ The program is intended to be run in a shell, and will prompt for the parameters
 
 ### Construction Methods:
 * keyGen(n,q) - Generates a secret vector *x* (the "key") which will be used in the other methods.
-* enc(n,q,x,m) -  Encrypts the message bit *m*. *x* will be multiplied with random coefficients and added with error, and *m* * *q*/2 will be added.
+* enc(n,q,x,m) -  Encrypts the message bit *m*. *x* will be multiplied with random coefficients and added with error, and *m***q*/2 will be added.
 * dec(n,q,b,x,a,y) - Decrypts the ciphertext and outputs the message bit *m*. It calculates *z*=*y*-*a*·*x*, and outputs the bit based on the accepted error bound.
 
 ### Subroutines:
@@ -36,16 +35,18 @@ The program is intended to be run in a shell, and will prompt for the parameters
 * check2(bits) - Tests the correctness of multiple random bits (specified by the number in the input). This is run once by default with 16 bits.
 * check3(bits) - Tests correctness of multiple random bits, but only contains one secret key and shows the public information for all the bits encoded as well as the bits encoded.
 
-### Attacks:
-* generateBruteForce(n,q,b) - Generates a key that the code attacks by requesting many samples and algorithmically checking every value. By default, a key is considered correct if it properly decrpyts 20 *0* bits and 20 *1* bits.
+### Oracle Attacks:
+* generateBruteForce(n,q,b) - Simulates a possible chosen plaintext attack, which operates by requesting many samples from the encryption method with every possible key given the parameters. Generates a key that the code attacks by requesting many samples and algorithmically checking every value. By default, a key is considered correct if it properly decrpyts 10 *0* bits and 10 *1* bits.
+* chosenCiphertestAttack(n,q,b) - Simulates a possible (and effective) chosen ciphertext attack, which operates generally by continuously asking for decryptions of ciphertexts. Generates a secret key and uses the decryption oracle to crack it quickly by entering ciphertexts where the vectors only have a single value with a coefficient of one and using the error bounds to find the value of that coefficient in the secret key.
+
+### Sample Attack
 * sampleBruteForce(n,q,m,b) - Takes *m* * *n* coefficients as the first user input (the first *n* coefficients correspond to the first equation) and *m* outputs to each equation, and finally a third prompt for if there is an expected message. If there is an expected message, then the method solves for the key, otherwise, it will show the most likely key.
-* chosenCiphertestAttack(n,q,b) - Generates a secret key and uses the decryption oracle to crack it quickly. Does this by entering ciphertexts with only one coefficient and using the error bounds to find the value of that coefficient in the secret key.
 
 ## FHE Methods
 These methods allow LWE encryptions to interact with one another and create encryptions of bits using other encryptions. Currently only the NOT and XOR gate have been developed.
-* isnot(x,a,y) - Takes the input of a ciphertext vector and its output and flips its bit (an encryption of *0* becomes *1* and *1* becomes *0*).
-* isxor(x,a0,y0,a1,y1) - Adds the 2 vectors (*a0* & *a1*) as well as the inputs (*y0* & *y1*). This can be seen as addition mod 2 with the bits which is equivalent to an XOR gate.  
-Checks have been developed for these FHE methods.
+* notct(a,y) - Takes the input of a ciphertext vector and its output and flips its bit (an encryption of *0* becomes *1* and *1* becomes *0*).
+* addct(a0,y0,a1,y1) - Adds the 2 vectors (*a0* & *a1*) as well as the inputs (*y0* & *y1*). This can be seen as addition mod 2 with the bits which is equivalent to an XOR gate.  
+Checks have been developed for these FHE methods (isnot, isxor, checknot, checkxor).
 
 # EmaiLWE
 This program was developed to act as an encryption protocol over email using LWE. It is a public key protocol using LWE and was intended to be used over email, and writes out text files with vectors.
