@@ -1,6 +1,7 @@
 # LWE-Project
 
 Implementing a very primitive LWE system using Python, and additionally using a public key system over email to encrypt messages.  
+
 <b>IMPORTANT: This was a student run project, and SHOULD NOT BE USED FOR COMMUNICATING ANY ACTUALLY SENSITIVE INFORMATION. User discretion is advised.</b>
 
 ## Table of Contents
